@@ -1,11 +1,14 @@
 ## Public Data Stream Visualization
 Visualizing public data stream using different Web APIs and JS & CSS frameworks.
+
+
 [Demo - Data Visualization](http://nathan5x.github.io/PublicDataViz/)
 
 ### Data Source
 
 For C and B Level Work
-[Wimp Weather Station - https://data.sparkfun.com/streams/dZ4EVmE8yGCRGx5XRX1W](https://data.sparkfun.com/streams/dZ4EVmE8yGCRGx5XRX1W)
+---
+[Wimp Weather Station - https://data.sparkfun.com/streams/](https://data.sparkfun.com/streams/dZ4EVmE8yGCRGx5XRX1W)
 
 For A Level Work
 
