@@ -85,7 +85,7 @@
                 <div class="col-lg-12 text-center">
                     <h2 class="section-heading">C-Level Work</h2>
                     <hr class="primary">
-                    <h5> Data Source: <a href="https://data.sparkfun.com/streams/dZ4EVmE8yGCRGx5XRX1W">Wimp Weather Station </a> | Polling Time: 5000 ms </h5>
+                    <h5> Data Source: <a href="https://data.sparkfun.com/streams/dZ4EVmE8yGCRGx5XRX1W">Wimp Weather Station </a> | Polling Interval: 5000 ms </h5>
                 </div>
             </div>
         </div>
@@ -102,7 +102,7 @@
                 <div class="col-lg-12 text-center">
                     <h2 class="section-heading">B-Level Work</h2>
                     <hr class="primary">
-                    <h5> Data Source: <a href="https://data.sparkfun.com/streams/dZ4EVmE8yGCRGx5XRX1W">Wimp Weather Station </a> | Polling Time: 5000 ms </h5>
+                    <h5> Data Source: <a href="https://data.sparkfun.com/streams/dZ4EVmE8yGCRGx5XRX1W">Wimp Weather Station </a> | Polling Interval: 5000 ms </h5>
                 </div>
             </div>
         </div>
@@ -116,12 +116,14 @@
                     <div class="col-lg-12 temperature-counter">
                       <div class="row">
                         <div class="col-lg-6 highest text-center">
-                            <h2> 78&#176;C </h2>
+                            <h2 id="highTempText"> 78&#176;C </h2>
                             <h6> Highest <br/>Temperature </h6>
                         </div>
 
                         <div class="col-lg-6 clock">
-                          <div id="bLevelTempClock"> </div>
+                          <div id="bLevelTempClock_H"> </div>
+                          <div id="bLevelTempClock_M"> </div>
+                          <div id="bLevelTempClock_S"> </div>
                         </div>
                        </div>
                     </div>
@@ -130,12 +132,14 @@
                     <div class="col-lg-12 humidity-counter">
                       <div class="row">
                         <div class="col-lg-6 highest text-center">
-                            <h2> 80 % </h2>
+                            <h2 id="highHumidText"> 80 % </h2>
                             <h6> Highest <br/>Humidity </h6>
                         </div>
 
                         <div class="col-lg-6 clock">
-                          <div id="bLevelHumidClock"> </div>
+                          <div id="bLevelHumidClock_H"> </div>
+                          <div id="bLevelHumidClock_M"> </div>
+                          <div id="bLevelHumidClock_S"> </div>
                         </div>
                        </div>
                     </div>
@@ -174,6 +178,7 @@
     <script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
 
     <script type="text/javascript" src="js/rapheal.js"></script>
+    <script type="text/javascript" src="js/circle-progress.js"></script>
     <!-- Custom Theme JavaScript -->
     <script src="js/creative.js"></script>
     <script src="js/app.js"></script>

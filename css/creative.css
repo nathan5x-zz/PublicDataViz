@@ -442,7 +442,28 @@ body {
     left: -20px;
 }
 
+#bLevelHumidClock_H, #bLevelTempClock_H {
+  position: relative;
+  z-index: 1000;
+  top: 50px;
+  left: 70px;
+}
+
+#bLevelHumidClock_M, #bLevelTempClock_M {
+  position: relative;
+  z-index: 1000;
+  top: 0px;
+  left: 50px;
+}
+
+#bLevelHumidClock_S, #bLevelTempClock_S {
+  position: relative;
+  z-index: 1000;
+  top: -80px;
+  left: 30px;
+}
+
 .temperature-counter, .humidity-counter {
-  padding-top: 50px;
+  padding-top: 27px;
   padding-left: 20px;
 }

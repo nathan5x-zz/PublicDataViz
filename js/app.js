@@ -3,7 +3,7 @@ var myLineChart;
 $(document).ready(function(){
 
   var dummyData = [];
-  var pollingTimer = window.setInterval( getPKIData, 45000);
+  var pollingTimer = window.setInterval( getWeatherData, 45000);
   var globalData = [];
   var initialized = false;
   var $lineChart;
@@ -127,7 +127,7 @@ $(document).ready(function(){
   // Apply the theme
   Highcharts.setOptions(Highcharts.theme);
 
-  function getPKIData() {
+  function getWeatherData() {
     $.ajax({
       url: "https://data.sparkfun.com/output/dZ4EVmE8yGCRGx5XRX1W.json",
       dataType: "jsonp",
@@ -227,11 +227,23 @@ $(document).ready(function(){
 
     var offset = 2;
     var pointer = 2;
-
+    var highTemp = 0;
+    var highHumidity = 0;
     window.setInterval( function(){
       for(var j=pointer-2; j>=pointer-offset; j--) {
         var nData = globalData[j];
         var $lineChart = $('#cLevelChartContainer').highcharts();
+        if(highTemp < nData.tempf) {
+            highTemp = nData.tempf;
+            $('#highTempText').html(highTemp +'&#176;C');
+            updateClock(nData.measurementTime, 'Temp');
+        }
+
+        if(highHumidity < nData.humidity) {
+            highHumidity = nData.humidity;
+            $('#highHumidText').html(highHumidity +'%');
+              updateClock(nData.measurementTime, 'Humid');
+        }
 
         $lineChart.series[0].addPoint({
           y: parseFloat(nData.tempf),
@@ -254,118 +266,44 @@ $(document).ready(function(){
             }, 1000);
           }
 
-          getPKIData();
+          getWeatherData();
 
-          /* Rapheal JS rendering */
-          var tClockR = Raphael("bLevelTempClock", 200, 200);
-          var bClockR = Raphael("bLevelTempClock", 200, 200);
-          renderClock(tClockR);
-          renderClock(bClockR);
+        function updateClock(time, dest) {
+          var valueArray = time.split(':');
+          var hrValue = parseFloat(valueArray[0]) / 12 * 1.0;
+          var minValue = parseFloat(valueArray[1]) / 60 * 1.0;
+          var secValue = parseFloat(valueArray[2].substring(0, 2)) / 60 * 1.0;
 
-          function renderClock(r) {
-            var R = 60,
-            init = true,
-            param = {stroke: "#fff", "stroke-width": 8},
-            marksAttr = {fill: "#cccccc" || "#444", stroke: "none"};
-            // Custom Attribute
-            r.customAttributes.arc = function (value, total, R) {
-              var alpha = 360 / total * value,
-              a = (90 - alpha) * Math.PI / 180,
-              x = 140 + R * Math.cos(a),
-              y = 120 - R * Math.sin(a),
-              color = "hsb(".concat(Math.round(R) / 160, ",", value / total, ", .75)"),
-              path;
-              if (total == value) {
-                path = [["M", 100, 80 - R], ["A", R, R, 0, 1, 1, 99.99, 80 - R]];
-              } else {
-                path = [["M", 100, 100 - R], ["A", R, R, 0, +(alpha > 180), 1, x, y]];
+          $('#bLevel'+dest+'Clock_H').circleProgress({
+               value: hrValue,
+               size: 30,
+               startAngle: 80,
+               thickness: 6,
+               fill: {
+                   gradient: ["#f05f40", "#ff0000"]
+               },
+               emptyFill: "rgba(255, 0, 0, .1)"
+           });
+
+           $('#bLevel'+dest+'Clock_M').circleProgress({
+              value: minValue,
+              size: 60,
+              startAngle: 80,
+              thickness: 6,
+              fill: {
+                  gradient: ["#f2f2f2", "#ffffff"]
               }
-              return {path: path, stroke: color};
-            };
+          });
 
-            drawMarks(R, 60);
-            var sec = r.path().attr(param).attr({arc: [0, 140, R]});
-            R -= 20;
+          $('#bLevel'+dest+'Clock_S').circleProgress({
+             value: secValue,
+             size: 90,
+             startAngle: 80,
+             thickness: 6,
+             fill: {
+                 gradient: ["#cecece", "#f05f40"]
+             }
+         });
+        }
 
-            drawMarks(R, 60);
-            var min = r.path().attr(param).attr({arc: [0, 160, R]});
-            R -= 20;
-
-            drawMarks(R, 12);
-            var hor = r.path().attr(param).attr({arc: [0, 180, R]});
-            R -= 20;
-
-            // drawMarks(R, 31);
-            // var day = r.path().attr(param).attr({arc: [0, 31, R]});
-            // R -= 20;
-            //
-            // drawMarks(R, 12);
-            // var mon = r.path().attr(param).attr({arc: [0, 12, R]});
-            var pm = r.circle(100, 100, 2).attr({stroke: "none", fill: "rgb(0,0,255)"});
-            //var mon = r.path().attr(param).attr({arc: [0, 12, R]});
-            //var pm = r.circle(100, 100, 5).attr({stroke: "none", fill: Raphael.hsb2rgb(15 / 200, 1, .75).hex});
-
-            function drawMarks(R, total) {
-              if (total == 31) { // month
-                var d = new Date;
-                d.setDate(1);
-                d.setMonth(d.getMonth() + 1);
-                d.setDate(-1);
-                total = d.getDate();
-              }
-              var color = "hsb(".concat(Math.round(R) / 200, ", 1, .75)"),
-              out = r.set();
-              for (var value = 0; value < total; value++) {
-                var alpha = 360 / total * value,
-                a = (90 - alpha) * Math.PI / 180,
-                x = 100 + R * Math.cos(a),
-                y = 100 - R * Math.sin(a);
-                out.push(r.circle(x, y, 1).attr(marksAttr));
-              }
-              return out;
-            }
-          }
-
-          //html[5].style.color = Raphael.hsb2rgb(15 / 200, 1, .75).hex;
-
-          function updateVal(value, total, R, hand, id) {
-            if (total == 31) { // month
-              var d = new Date;
-              d.setDate(1);
-              d.setMonth(d.getMonth() + 1);
-              d.setDate(-1);
-              total = d.getDate();
-            }
-            var color = "hsb(".concat(Math.round(R) / 200, ",", value / total, ", .75)");
-            if (init) {
-              hand.animate({arc: [value, total, R]}, 300, ">");
-            } else {
-              if (!value || value == total) {
-                value = total;
-                hand.animate({arc: [value, total, R]}, 250, "bounce", function () {
-                  hand.attr({arc: [0, total, R]});
-                });
-              } else {
-                hand.animate({arc: [value, total, R]}, 250, "elastic");
-              }
-            }
-            //html[id].innerHTML = (value < 10 ? "0" : "") + value;
-            //  html[id].style.color = Raphael.getRGB(color).hex;
-          }
-
-          (function () {
-            var d = new Date,
-            am = (d.getHours() < 12),
-            h = d.getHours() % 12 || 12;
-            updateVal(d.getSeconds(), 60, 66, sec, 2);
-            updateVal(d.getMinutes(), 60, 53, min, 1);
-            updateVal(h, 12, 120, hor, 0);
-            updateVal(d.getDate(), 31, 80, day, 3);
-            updateVal(d.getMonth() + 1, 12, 40, mon, 4);
-            pm[(am ? "hide" : "show")]();
-            //html[5].innerHTML = am ? "AM" : "PM";
-            setTimeout(arguments.callee, 1000);
-            init = false;
-          })();
-
-        });
+});
