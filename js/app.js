@@ -237,12 +237,14 @@ $(document).ready(function(){
             highTemp = nData.tempf;
             $('#highTempText').html(highTemp +'&#176;C');
             updateClock(nData.measurementTime, 'Temp');
+            $('#tempTimeText').html(nData.measurementTime);
         }
 
         if(highHumidity < nData.humidity) {
             highHumidity = nData.humidity;
             $('#highHumidText').html(highHumidity +'%');
-              updateClock(nData.measurementTime, 'Humid');
+            updateClock(nData.measurementTime, 'Humid');
+            $('#humidTimeText').html(nData.measurementTime);
         }
 
         $lineChart.series[0].addPoint({
